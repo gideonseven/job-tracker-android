@@ -21,3 +21,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "JobTracker"
 include(":app")
+include(":core-domain")
+include(":core-data")
+include(":core-ui")
+include(":feature-applications")
+include(":feature-addedit")
+include(":feature-dashboard")
