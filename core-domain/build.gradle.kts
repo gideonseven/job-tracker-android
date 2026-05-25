@@ -35,6 +35,8 @@ dependencies {
     // Coroutines only — domain has no Android UI, no DB, no Hilt
     implementation(libs.kotlinx.coroutines.android)
 
+    implementation(libs.javax.inject)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

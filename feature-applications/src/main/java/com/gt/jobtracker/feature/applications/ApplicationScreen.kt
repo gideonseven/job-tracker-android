@@ -2,40 +2,63 @@ package com.gt.jobtracker.feature.applications
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gt.jobtracker.core.domain.model.JobApplication
-
+import com.gt.jobtracker.core.domain.usecase.StatusTransitionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ApplicationScreen(
+fun ApplicationsScreen(
     viewModel: ApplicationsViewModel = hiltViewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val event by viewModel.event.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // show snackbar on invalid transition
+    LaunchedEffect(event) {
+        event?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.eventConsumed()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("My Applications") })
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -48,7 +71,6 @@ fun ApplicationScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-
                 is ApplicationsUiState.Success -> {
                     if (state.applications.isEmpty()) {
                         Text(
@@ -57,13 +79,23 @@ fun ApplicationScreen(
                         )
                     } else {
                         LazyColumn {
-                            items(state.applications) { application ->
-                                ApplicationItem(application = application)
+                            items(
+                                items = state.applications,
+                                key = { it.id }
+                            ) { application ->
+                                ApplicationItem(
+                                    application = application,
+                                    onStatusChange = { newStatus ->
+                                        viewModel.updateStatus(application, newStatus)
+                                    },
+                                    onDelete = {
+                                        viewModel.deleteApplication(application)
+                                    }
+                                )
                             }
                         }
                     }
                 }
-
                 is ApplicationsUiState.Error -> {
                     Text(
                         text = state.message,
@@ -77,28 +109,70 @@ fun ApplicationScreen(
 }
 
 @Composable
-fun ApplicationItem(application: JobApplication) {
+fun ApplicationItem(
+    application: JobApplication,
+    onStatusChange: (com.gt.jobtracker.core.domain.model.JobStatus) -> Unit,
+    onDelete: () -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+    val availableTransitions = StatusTransitionManager
+        .getAvailableTransitions(application.status)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = application.roleTitle,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = application.company,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = application.status.name,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = application.roleTitle,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = application.company,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = application.status.name.replace("_", " "),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            // status transition dropdown
+            if (availableTransitions.isNotEmpty()) {
+                Box {
+                    IconButton(onClick = { showMenu = true }) {
+                        Text("▶")
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        availableTransitions.forEach { status ->
+                            DropdownMenuItem(
+                                text = { Text(status.name.replace("_", " ")) },
+                                onClick = {
+                                    onStatusChange(status)
+                                    showMenu = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // delete
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete"
+                )
+            }
         }
     }
 }
