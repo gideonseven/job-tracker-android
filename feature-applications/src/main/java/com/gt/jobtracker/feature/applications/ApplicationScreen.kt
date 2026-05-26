@@ -31,10 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gt.jobtracker.core.domain.model.JobApplication
+import com.gt.jobtracker.core.domain.model.JobStatus
 import com.gt.jobtracker.core.domain.usecase.StatusTransitionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -171,6 +173,48 @@ fun ApplicationItem(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete"
+                )
+            }
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun ApplicationsScreenPreview() {
+    val sampleApplications = listOf(
+        JobApplication(
+            id = 1,
+            company = "Atlassian",
+            roleTitle = "Senior Android Engineer",
+            status = JobStatus.PHONE_SCREEN,
+            dateApplied = System.currentTimeMillis(),
+            location = "Sydney, Australia"
+        ),
+        JobApplication(
+            id = 2,
+            company = "Canva",
+            roleTitle = "Android Developer",
+            status = JobStatus.APPLIED,
+            dateApplied = System.currentTimeMillis(),
+            location = "Remote"
+        ),
+        JobApplication(
+            id = 3,
+            company = "Afterpay",
+            roleTitle = "Mobile Engineer",
+            status = JobStatus.TECHNICAL,
+            dateApplied = System.currentTimeMillis(),
+            location = "Melbourne, Australia"
+        )
+    )
+
+    MaterialTheme {
+        LazyColumn {
+            items(sampleApplications) { application ->
+                ApplicationItem(
+                    application = application,
+                    onStatusChange = {},
+                    onDelete = {}
                 )
             }
         }
