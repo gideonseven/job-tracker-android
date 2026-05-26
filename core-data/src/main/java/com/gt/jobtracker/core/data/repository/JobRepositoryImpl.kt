@@ -3,6 +3,7 @@ package com.gt.jobtracker.core.data.repository
 import com.gt.jobtracker.core.data.local.JobApplicationDao
 import com.gt.jobtracker.core.data.mapper.toDomain
 import com.gt.jobtracker.core.data.mapper.toEntity
+import com.gt.jobtracker.core.data.worker.SyncManager
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.repository.JobRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class JobRepositoryImpl @Inject constructor(
-    private val dao: JobApplicationDao
+    private val dao: JobApplicationDao,
+    private val syncManager: SyncManager
 ) : JobRepository {
 
     override fun getAllApplications(): Flow<List<JobApplication>> {
@@ -25,6 +27,7 @@ class JobRepositoryImpl @Inject constructor(
 
     override suspend fun upsertApplication(application: JobApplication) {
         dao.upsertApplication(application.toEntity())
+        syncManager.requestSync()
     }
 
     override suspend fun deleteApplication(application: JobApplication) {

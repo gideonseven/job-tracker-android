@@ -15,6 +15,7 @@ room = "2.7.1"
 navigation = "2.9.0"
 coroutines = "1.8.1"
 ksp = "2.0.21-1.0.25"
+workmanager = "2.10.0"
 
 [libraries]
 # Core
@@ -60,6 +61,10 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
+
+#WorkManager
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version = "1.2.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,7 +1,9 @@
 package com.gt.jobtracker.core.data.di
 
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.room.Room
+import androidx.work.WorkerFactory
 import com.gt.jobtracker.core.data.local.JobApplicationDao
 import com.gt.jobtracker.core.data.local.JobTrackerDatabase
 import com.gt.jobtracker.core.data.repository.JobRepositoryImpl
@@ -23,6 +25,11 @@ abstract class DataModule {
     abstract fun bindJobRepository(
         impl: JobRepositoryImpl
     ): JobRepository
+
+    @Binds
+    abstract fun bindWorkerFactory(
+        factory: HiltWorkerFactory
+    ): WorkerFactory
 
     companion object {
         @Provides
