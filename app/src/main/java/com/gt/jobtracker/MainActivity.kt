@@ -13,6 +13,13 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.gt.jobtracker.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,6 +38,22 @@ class MainActivity : ComponentActivity() {
                 AppNavHost(navController = navController)
             }
         }
+
+//        test Crash
+//        setContent {
+//            MaterialTheme {
+//                val navController = rememberNavController()
+//                Box(modifier = Modifier.fillMaxSize()) {
+//                    AppNavHost(navController = navController)
+//                    Button(
+//                        onClick = { throw RuntimeException("Test crash — Crashlytics verification") },
+//                        modifier = Modifier.align(Alignment.BottomCenter)
+//                    ) {
+//                        Text("Test Crash")
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun requestNotificationPermission() {
