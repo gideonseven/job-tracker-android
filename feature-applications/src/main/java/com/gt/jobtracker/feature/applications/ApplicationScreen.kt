@@ -42,13 +42,14 @@ import com.gt.jobtracker.core.domain.usecase.StatusTransitionManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicationsScreen(
+    onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToAddEdit: () -> Unit = {},
     viewModel: ApplicationsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val event by viewModel.event.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // show snackbar on invalid transition
     LaunchedEffect(event) {
         event?.let {
             snackbarHostState.showSnackbar(it)
@@ -60,7 +61,14 @@ fun ApplicationsScreen(
         topBar = {
             TopAppBar(title = { Text("My Applications") })
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            androidx.compose.material3.FloatingActionButton(
+                onClick = onNavigateToAddEdit
+            ) {
+                Text("+")
+            }
+        }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -92,6 +100,9 @@ fun ApplicationsScreen(
                                     },
                                     onDelete = {
                                         viewModel.deleteApplication(application)
+                                    },
+                                    onTap = {
+                                        onNavigateToDetail(application.id)
                                     }
                                 )
                             }
@@ -114,13 +125,15 @@ fun ApplicationsScreen(
 fun ApplicationItem(
     application: JobApplication,
     onStatusChange: (com.gt.jobtracker.core.domain.model.JobStatus) -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onTap: () -> Unit = {}
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val availableTransitions = StatusTransitionManager
         .getAvailableTransitions(application.status)
 
     Card(
+        onClick = onTap,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -145,7 +158,6 @@ fun ApplicationItem(
                 )
             }
 
-            // status transition dropdown
             if (availableTransitions.isNotEmpty()) {
                 Box {
                     IconButton(onClick = { showMenu = true }) {
@@ -168,7 +180,6 @@ fun ApplicationItem(
                 }
             }
 
-            // delete
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -178,6 +189,7 @@ fun ApplicationItem(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun ApplicationsScreenPreview() {

@@ -14,13 +14,45 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.JobTracker">
+
+            <!-- Main launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Deeplink: applications list -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="jobtracker"
+                    android:host="applications" />
+            </intent-filter>
+
+            <!-- Deeplink: application detail -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="jobtracker"
+                    android:host="applications"
+                    android:pathPattern="/.*" />
+            </intent-filter>
+
+            <!-- Deeplink: add/edit -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="jobtracker"
+                    android:host="addedit" />
+            </intent-filter>
+
         </activity>
     </application>
 
