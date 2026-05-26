@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".JobTrackerApplication"
         android:allowBackup="true"
@@ -26,35 +28,48 @@
             <!-- Deeplink: applications list -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="jobtracker"
-                    android:host="applications" />
+                    android:host="applications"
+                    android:scheme="jobtracker" />
             </intent-filter>
 
             <!-- Deeplink: application detail -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="jobtracker"
                     android:host="applications"
-                    android:pathPattern="/.*" />
+                    android:pathPattern="/.*"
+                    android:scheme="jobtracker" />
             </intent-filter>
 
             <!-- Deeplink: add/edit -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="jobtracker"
-                    android:host="addedit" />
+                    android:host="addedit"
+                    android:scheme="jobtracker" />
             </intent-filter>
 
         </activity>
+        <service
+            android:name=".service.FCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
