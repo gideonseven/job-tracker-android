@@ -81,6 +81,7 @@ fun ApplicationsScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 is ApplicationsUiState.Success -> {
                     if (state.applications.isEmpty()) {
                         Text(
@@ -96,7 +97,10 @@ fun ApplicationsScreen(
                                 ApplicationItem(
                                     application = application,
                                     onStatusChange = { newStatus ->
-                                        viewModel.updateStatus(application, newStatus)
+                                        viewModel.updateStatus(
+                                            application,
+                                            newStatus
+                                        )
                                     },
                                     onDelete = {
                                         viewModel.deleteApplication(application)
@@ -109,6 +113,7 @@ fun ApplicationsScreen(
                         }
                     }
                 }
+
                 is ApplicationsUiState.Error -> {
                     Text(
                         text = state.message,

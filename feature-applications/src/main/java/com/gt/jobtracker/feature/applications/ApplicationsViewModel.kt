@@ -49,18 +49,33 @@ class ApplicationsViewModel @Inject constructor(
     private val _event = MutableStateFlow<String?>(null)
     val event: StateFlow<String?> = _event
 
-    fun updateStatus(application: JobApplication, newStatus: JobStatus) {
+    fun updateStatus(
+        application: JobApplication,
+        newStatus: JobStatus,
+        onStatusTracked: ((String, String, String) -> Unit)? = null
+    ) {
         viewModelScope.launch {
             val result = updateStatusUseCase(application, newStatus)
+            result.onSuccess {
+                onStatusTracked?.invoke(
+                    application.company,
+                    application.status.name,
+                    newStatus.name
+                )
+            }
             result.onFailure { error ->
                 _event.update { error.message }
             }
         }
     }
 
-    fun deleteApplication(application: JobApplication) {
+    fun deleteApplication(
+        application: JobApplication,
+        onDeleted: ((String) -> Unit)? = null
+    ) {
         viewModelScope.launch {
             repository.deleteApplication(application)
+            onDeleted?.invoke(application.company)
         }
     }
 
