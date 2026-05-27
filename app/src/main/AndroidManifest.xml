@@ -81,6 +81,10 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+            <meta-data
                 android:name="com.gt.jobtracker.performance.PerformanceInitializer"
                 android:value="androidx.startup" />
         </provider>
