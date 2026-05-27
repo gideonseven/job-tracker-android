@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.gt.jobtracker.flags.FeatureFlagManager
 import com.gt.jobtracker.navigation.AppNavHost
+import com.gt.jobtracker.performance.PerformanceTracer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,12 +23,16 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var featureFlagManager: FeatureFlagManager
 
+    @Inject
+    lateinit var performanceTracer: PerformanceTracer
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { _ -> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        performanceTracer.startTrace(PerformanceTracer.TRACE_APP_START)
         requestNotificationPermission()
         featureFlagManager.fetch()
         enableEdgeToEdge()
@@ -40,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+        performanceTracer.stopTrace(PerformanceTracer.TRACE_APP_START)
     }
 
     private fun requestNotificationPermission() {

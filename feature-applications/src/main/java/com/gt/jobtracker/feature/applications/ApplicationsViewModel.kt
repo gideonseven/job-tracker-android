@@ -2,6 +2,7 @@ package com.gt.jobtracker.feature.applications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.perf.FirebasePerformance
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
 import com.gt.jobtracker.core.domain.repository.JobRepository
@@ -23,9 +24,17 @@ class ApplicationsViewModel @Inject constructor(
     private val updateStatusUseCase: UpdateApplicationStatusUseCase
 ) : ViewModel() {
 
+    private val loadTrace = FirebasePerformance.getInstance()
+        .newTrace("load_applications")
+
+    init {
+        loadTrace.start()
+    }
+
     val uiState: StateFlow<ApplicationsUiState> = repository
         .getAllApplications()
         .map { applications ->
+            loadTrace.stop()
             ApplicationsUiState.Success(applications) as ApplicationsUiState
         }
         .catch { throwable ->
@@ -37,7 +46,6 @@ class ApplicationsViewModel @Inject constructor(
             initialValue = ApplicationsUiState.Loading
         )
 
-    // one-time events — snackbar messages
     private val _event = MutableStateFlow<String?>(null)
     val event: StateFlow<String?> = _event
 

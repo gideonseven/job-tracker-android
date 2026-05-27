@@ -70,4 +70,7 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     debugImplementation(libs.compose.ui.test.manifest)
     kspAndroidTest(libs.hilt.compiler)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.perf)
 }

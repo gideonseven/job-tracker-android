@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics.plugin)
+    alias(libs.plugins.firebase.perf.plugin)
 }
 
 android {
@@ -44,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -82,6 +84,10 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.config)
+
+    //Profiler
+    implementation(libs.androidx.profileinstaller)
+    implementation(libs.firebase.perf)
 
     // Modules
     implementation(project(":core-domain"))
