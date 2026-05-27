@@ -94,6 +94,7 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" 
 #Profiler
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+androidx-startup = { group = "androidx.startup", name = "startup-runtime", version = "1.2.0" }
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -88,6 +88,7 @@ dependencies {
     //Profiler
     implementation(libs.androidx.profileinstaller)
     implementation(libs.firebase.perf)
+    implementation(libs.androidx.startup)
 
     // Modules
     implementation(project(":core-domain"))

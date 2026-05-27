@@ -21,7 +21,7 @@ class JobTrackerApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         setupStrictMode()
     }
 
