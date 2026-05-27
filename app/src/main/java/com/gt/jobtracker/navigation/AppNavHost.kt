@@ -44,8 +44,15 @@ fun AppNavHost(
                     action = Intent.ACTION_VIEW
                 }
             )
-        ) {
-            androidx.compose.material3.Text("Detail Screen — Coming Soon")
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<ApplicationDetailRoute>()
+            com.gt.jobtracker.feature.applications.detail.DetailScreen(
+                applicationId = route.applicationId,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEdit = { id ->
+                    navController.navigate(AddEditRoute(applicationId = id))
+                }
+            )
         }
 
         composable<AddEditRoute>(
