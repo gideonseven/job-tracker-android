@@ -31,6 +31,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

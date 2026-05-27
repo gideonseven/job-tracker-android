@@ -32,28 +32,28 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestNotificationPermission()
         enableEdgeToEdge()
-        setContent {
-            MaterialTheme {
-                val navController = rememberNavController()
-                AppNavHost(navController = navController)
-            }
-        }
-
-//        test Crash
 //        setContent {
 //            MaterialTheme {
 //                val navController = rememberNavController()
-//                Box(modifier = Modifier.fillMaxSize()) {
-//                    AppNavHost(navController = navController)
-//                    Button(
-//                        onClick = { throw RuntimeException("Test crash — Crashlytics verification") },
-//                        modifier = Modifier.align(Alignment.BottomCenter)
-//                    ) {
-//                        Text("Test Crash")
-//                    }
-//                }
+//                AppNavHost(navController = navController)
 //            }
 //        }
+
+//        test Crash
+        setContent {
+            MaterialTheme {
+                val navController = rememberNavController()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    AppNavHost(navController = navController)
+                    Button(
+                        onClick = { throw RuntimeException("Test crash — Crashlytics verification") },
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    ) {
+                        Text("Test Crash")
+                    }
+                }
+            }
+        }
     }
 
     private fun requestNotificationPermission() {
