@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.gt.jobtracker.feature.applications.ApplicationsScreen
 import com.gt.jobtracker.flags.FeatureFlagManager
 
@@ -54,8 +55,12 @@ fun AppNavHost(
                     action = Intent.ACTION_VIEW
                 }
             )
-        ) {
-            androidx.compose.material3.Text("Add/Edit Screen — Coming Soon")
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<AddEditRoute>()
+            com.gt.jobtracker.feature.addedit.AddEditScreen(
+                applicationId = route.applicationId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
