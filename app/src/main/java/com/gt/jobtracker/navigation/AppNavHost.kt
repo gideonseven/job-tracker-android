@@ -7,9 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.gt.jobtracker.feature.applications.ApplicationsScreen
+import com.gt.jobtracker.flags.FeatureFlagManager
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost(
+    navController: NavHostController,
+    featureFlagManager: FeatureFlagManager
+) {
     NavHost(
         navController = navController,
         startDestination = ApplicationsRoute

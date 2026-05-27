@@ -11,18 +11,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import com.gt.jobtracker.flags.FeatureFlagManager
 import com.gt.jobtracker.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var featureFlagManager: FeatureFlagManager
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -31,27 +29,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestNotificationPermission()
+        featureFlagManager.fetch()
         enableEdgeToEdge()
-//        setContent {
-//            MaterialTheme {
-//                val navController = rememberNavController()
-//                AppNavHost(navController = navController)
-//            }
-//        }
-
-//        test Crash
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                Box(modifier = Modifier.fillMaxSize()) {
-                    AppNavHost(navController = navController)
-                    Button(
-                        onClick = { throw RuntimeException("Test crash — Crashlytics verification") },
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    ) {
-                        Text("Test Crash")
-                    }
-                }
+                AppNavHost(
+                    navController = navController,
+                    featureFlagManager = featureFlagManager
+                )
             }
         }
     }
