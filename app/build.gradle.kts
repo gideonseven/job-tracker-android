@@ -34,7 +34,9 @@ android {
             )
         }
         debug {
-            manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
+            // Crashlytics collection is controlled at runtime via
+            // JobTrackerApplication.onCreate() using BuildConfig.DEBUG,
+            // so no manifest placeholder is needed here.
         }
     }
     compileOptions {

@@ -21,7 +21,10 @@ class JobTrackerApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        // Enable Crashlytics only in release builds — debug crashes should not
+        // pollute the Firebase Crashlytics dashboard.
+        FirebaseCrashlytics.getInstance()
+            .setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         setupStrictMode()
     }
 

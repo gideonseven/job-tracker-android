@@ -26,6 +26,7 @@ class ApplicationsViewModel @Inject constructor(
 
     private val loadTrace = FirebasePerformance.getInstance()
         .newTrace("load_applications")
+    private var traceCompleted = false
 
     init {
         loadTrace.start()
@@ -34,7 +35,13 @@ class ApplicationsViewModel @Inject constructor(
     val uiState: StateFlow<ApplicationsUiState> = repository
         .getAllApplications()
         .map { applications ->
-            loadTrace.stop()
+            // Stop the trace only on the first emission — the trace can only be
+            // stopped once; subsequent Room updates would otherwise throw
+            // IllegalStateException and kill the flow via .catch {}.
+            if (!traceCompleted) {
+                loadTrace.stop()
+                traceCompleted = true
+            }
             ApplicationsUiState.Success(applications) as ApplicationsUiState
         }
         .catch { throwable ->
