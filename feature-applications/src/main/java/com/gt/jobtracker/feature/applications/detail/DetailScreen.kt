@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
+import com.gt.jobtracker.ui.theme.JobTrackerTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -125,12 +126,14 @@ fun DetailScreen(
                 is DetailUiState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
+
                 is DetailUiState.NotFound -> {
                     Text(
                         text = "Application not found.",
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 is DetailUiState.Error -> {
                     Column(
                         modifier = Modifier
@@ -149,6 +152,7 @@ fun DetailScreen(
                         }
                     }
                 }
+
                 is DetailUiState.Success -> {
                     DetailContent(application = state.application)
                 }
@@ -245,14 +249,14 @@ fun DetailCard(label: String, value: String) {
 @Composable
 fun StatusChip(status: JobStatus, modifier: Modifier = Modifier) {
     val (containerColor, labelColor) = when (status) {
-        JobStatus.SAVED        -> Color(0xFFE0E0E0) to Color(0xFF424242)
-        JobStatus.APPLIED      -> Color(0xFFBBDEFB) to Color(0xFF0D47A1)
+        JobStatus.SAVED -> Color(0xFFE0E0E0) to Color(0xFF424242)
+        JobStatus.APPLIED -> Color(0xFFBBDEFB) to Color(0xFF0D47A1)
         JobStatus.PHONE_SCREEN -> Color(0xFFB2EBF2) to Color(0xFF006064)
-        JobStatus.TECHNICAL    -> Color(0xFFFFE0B2) to Color(0xFFE65100)
-        JobStatus.FINAL_ROUND  -> Color(0xFFE1BEE7) to Color(0xFF4A148C)
-        JobStatus.OFFER        -> Color(0xFFC8E6C9) to Color(0xFF1B5E20)
-        JobStatus.REJECTED     -> Color(0xFFFFCDD2) to Color(0xFFB71C1C)
-        JobStatus.GHOSTED      -> Color(0xFFCFD8DC) to Color(0xFF37474F)
+        JobStatus.TECHNICAL -> Color(0xFFFFE0B2) to Color(0xFFE65100)
+        JobStatus.FINAL_ROUND -> Color(0xFFE1BEE7) to Color(0xFF4A148C)
+        JobStatus.OFFER -> Color(0xFFC8E6C9) to Color(0xFF1B5E20)
+        JobStatus.REJECTED -> Color(0xFFFFCDD2) to Color(0xFFB71C1C)
+        JobStatus.GHOSTED -> Color(0xFFCFD8DC) to Color(0xFF37474F)
     }
     Surface(
         color = containerColor,
@@ -281,5 +285,7 @@ fun DetailContentPreview() {
         jobUrl = "https://careers.google.com/jobs/results/1234",
         notes = "Referred by Jane Doe. Strong culture fit — follow up after onsite."
     )
-    DetailContent(application = fakeApplication)
+    JobTrackerTheme {
+        DetailContent(application = fakeApplication)
+    }
 }
