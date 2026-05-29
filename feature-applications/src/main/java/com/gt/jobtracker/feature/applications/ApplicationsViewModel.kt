@@ -3,6 +3,8 @@ package com.gt.jobtracker.feature.applications
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.perf.FirebasePerformance
+import com.gt.jobtracker.core.domain.analytics.AnalyticsScreens
+import com.gt.jobtracker.core.domain.analytics.JobAnalytics
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
 import com.gt.jobtracker.core.domain.repository.JobRepository
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ApplicationsViewModel @Inject constructor(
     private val repository: JobRepository,
-    private val updateStatusUseCase: UpdateApplicationStatusUseCase
+    private val updateStatusUseCase: UpdateApplicationStatusUseCase,
+    private val analytics: JobAnalytics
 ) : ViewModel() {
 
     private val loadTrace = FirebasePerformance.getInstance()
@@ -29,6 +32,7 @@ class ApplicationsViewModel @Inject constructor(
     private var traceCompleted = false
 
     init {
+        analytics.trackScreen(AnalyticsScreens.APPLICATIONS_LIST)
         loadTrace.start()
     }
 
@@ -56,18 +60,14 @@ class ApplicationsViewModel @Inject constructor(
     private val _event = MutableStateFlow<String?>(null)
     val event: StateFlow<String?> = _event
 
-    fun updateStatus(
-        application: JobApplication,
-        newStatus: JobStatus,
-        onStatusTracked: ((String, String, String) -> Unit)? = null
-    ) {
+    fun updateStatus(application: JobApplication, newStatus: JobStatus) {
         viewModelScope.launch {
             val result = updateStatusUseCase(application, newStatus)
             result.onSuccess {
-                onStatusTracked?.invoke(
-                    application.company,
-                    application.status.name,
-                    newStatus.name
+                analytics.trackStatusChanged(
+                    company = application.company,
+                    fromStatus = application.status.name,
+                    toStatus = newStatus.name
                 )
             }
             result.onFailure { error ->
@@ -76,13 +76,10 @@ class ApplicationsViewModel @Inject constructor(
         }
     }
 
-    fun deleteApplication(
-        application: JobApplication,
-        onDeleted: ((String) -> Unit)? = null
-    ) {
+    fun deleteApplication(application: JobApplication) {
         viewModelScope.launch {
             repository.deleteApplication(application)
-            onDeleted?.invoke(application.company)
+            analytics.trackApplicationDeleted(application.company)
         }
     }
 

@@ -2,6 +2,8 @@ package com.gt.jobtracker.feature.addedit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gt.jobtracker.core.domain.analytics.AnalyticsScreens
+import com.gt.jobtracker.core.domain.analytics.JobAnalytics
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
 import com.gt.jobtracker.core.domain.repository.JobRepository
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    private val repository: JobRepository
+    private val repository: JobRepository,
+    private val analytics: JobAnalytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddEditUiState())
@@ -22,6 +25,10 @@ class AddEditViewModel @Inject constructor(
 
     private val _saved = MutableStateFlow(false)
     val saved: StateFlow<Boolean> = _saved
+
+    init {
+        analytics.trackScreen(AnalyticsScreens.ADD_EDIT)
+    }
 
     fun loadApplication(id: Long) {
         viewModelScope.launch {
@@ -88,6 +95,20 @@ class AddEditViewModel @Inject constructor(
                     notes = state.notes.trim().ifBlank { null }
                 )
             )
+            val statusName = state.status.name
+            if (state.isEditing) {
+                analytics.trackApplicationUpdated(
+                    company = state.company.trim(),
+                    roleTitle = state.roleTitle.trim(),
+                    status = statusName
+                )
+            } else {
+                analytics.trackApplicationAdded(
+                    company = state.company.trim(),
+                    roleTitle = state.roleTitle.trim(),
+                    status = statusName
+                )
+            }
             _saved.update { true }
         }
     }

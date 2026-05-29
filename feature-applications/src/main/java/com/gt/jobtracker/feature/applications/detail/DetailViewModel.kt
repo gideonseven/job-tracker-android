@@ -2,6 +2,8 @@ package com.gt.jobtracker.feature.applications.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gt.jobtracker.core.domain.analytics.AnalyticsScreens
+import com.gt.jobtracker.core.domain.analytics.JobAnalytics
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.repository.JobRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,15 +18,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val repository: JobRepository
+    private val repository: JobRepository,
+    private val analytics: JobAnalytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
     private var loadJob: Job? = null
+    private var screenTracked = false
 
     fun loadApplication(id: Long) {
+        if (!screenTracked) {
+            analytics.trackScreen(AnalyticsScreens.APPLICATION_DETAIL)
+            screenTracked = true
+        }
         loadJob?.cancel()
         _uiState.value = DetailUiState.Loading
         loadJob = viewModelScope.launch {
@@ -49,6 +57,7 @@ class DetailViewModel @Inject constructor(
     fun deleteApplication(application: JobApplication, onDeleted: () -> Unit) {
         viewModelScope.launch {
             repository.deleteApplication(application)
+            analytics.trackApplicationDeleted(application.company)
             onDeleted()
         }
     }
