@@ -8,12 +8,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.MaterialTheme
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.gt.jobtracker.flags.FeatureFlagManager
 import com.gt.jobtracker.navigation.AppNavHost
 import com.gt.jobtracker.performance.PerformanceTracer
+import com.gt.jobtracker.ui.theme.JobTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         featureFlagManager.fetch()
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
+            JobTrackerTheme {
                 val navController = rememberNavController()
                 AppNavHost(
                     navController = navController,

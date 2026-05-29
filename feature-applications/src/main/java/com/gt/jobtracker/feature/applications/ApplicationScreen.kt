@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
 import com.gt.jobtracker.core.domain.usecase.StatusTransitionManager
+import com.gt.jobtracker.ui.theme.JobTrackerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -225,7 +226,7 @@ fun ApplicationsScreenPreview() {
         )
     )
 
-    MaterialTheme {
+    JobTrackerTheme {
         LazyColumn {
             items(sampleApplications) { application ->
                 ApplicationItem(
