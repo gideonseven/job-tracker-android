@@ -32,6 +32,7 @@ fun AppNavHost(
                     navController.navigate(ApplicationDetailRoute(applicationId))
                 },
                 onNavigateToAddEdit = {
+//                    throw RuntimeException("Test Crash") // Force a crash
                     navController.navigate(AddEditRoute())
                 }
             )

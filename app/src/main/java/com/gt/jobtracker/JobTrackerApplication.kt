@@ -23,8 +23,7 @@ class JobTrackerApplication : Application(), Configuration.Provider {
         super.onCreate()
         // Enable Crashlytics only in release builds — debug crashes should not
         // pollute the Firebase Crashlytics dashboard.
-        FirebaseCrashlytics.getInstance()
-            .setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
         setupStrictMode()
     }
 
