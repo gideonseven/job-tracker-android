@@ -1,155 +1,272 @@
-# Building Mobile Apps at Scale — 8-Week Mastery Plan
+# Job Tracker — Android
 
-> Working through Gergely Orosz's *Building Mobile Apps at Scale: 39 Engineering Challenges* by building a real **Job Tracker** Android app (Track A) and writing study notes (Track B). Target: ~85% mastery (33 of 39 challenges) in 8 weeks at 1 hr/day, fitted to a FIFO roster.
+A production-quality Android app for tracking job applications through their full lifecycle. Built with a multi-module Clean Architecture, Jetpack Compose, and a complete Firebase integration stack including offline-first sync, push notifications, feature flags, crash reporting, and performance monitoring.
 
----
-
-## How this works
-
-**Two tracks, matched to FIFO energy:**
-
-| Track | What | When | Output |
-|---|---|---|---|
-| **A — Build** | Implement codeable challenges in the Job Tracker app | Days off (fresh brain, laptop) | Working features + commits |
-| **B — Study** | Read chapter, write a note in your own words | On-site (tired, after shift, no dev needed) | Markdown notes in `/notes` |
-
-**The rule of thumb:** if you can write code for it, it's Build. If it only exists at team/org scale, it's Study.
-
-**Cadence:** ~6 build sessions + ~8 study sessions per 14-day swing. Misses after night shift are expected and built in — don't treat a skipped day as failure.
-
-**The 6 skipped chapters** (read-only, no formal note — these are the most team-process-specific): 21 (Shared Architecture Across Apps), 22 (Tooling Maturity), 24 (Platform Libraries & Teams), 25 (Adopting New Languages), 27 (Cross-Platform Feature Dev), 28 (Cross-Platform vs Native). This is how we land at 85%, not a padded 100%.
+> Inspired by *Building Mobile Apps at Scale* by Gergely Orosz — implemented to cover 13 hands-on engineering challenges from the book.
 
 ---
 
-## Track A — Build challenges (the app)
+## Features
 
-Each maps to a real feature of the Job Tracker. Sessions are 1 hr; bigger features span multiple sessions.
+- Track applications from saved to offer/rejection with enforced status transitions
+- Add, edit, and delete applications with full form validation
+- Pull-to-refresh sync with remote API
+- Offline-first support — queue changes locally, sync automatically when back online
+- Interview reminder notifications via Firebase Cloud Messaging
+- Feature flag-gated dashboard (statistics screen behind `DASHBOARD_STATISTICS` flag)
+- Soft-delete pattern for safe offline/online reconciliation
+- Real-time analytics, crash reporting, and performance monitoring
 
-| # | Ch | Challenge | Job Tracker feature | Est. sessions |
-|---|---|---|---|---|
-| A1 | 16 | Modular Architecture & DI | Split into `:app`, `:data`, `:domain`, `:feature-*` modules + Hilt | 3 |
-| A2 | 1 | State Management | Application list/detail state, survives rotation & process death | 2 |
-| A3 | 14 | App State & Event-Driven Changes | Status changes (Applied→Interview→Offer) propagate cleanly | 2 |
-| A4 | 7 | Offline Support | Add an application offline, sync when back online (Room + WorkManager) | 3 |
-| A5 | 13 | Navigation Architecture | Type-safe nav between list, detail, add/edit | 2 |
-| A6 | 4 | Deeplinks | Open a specific application via link/notification | 1 |
-| A7 | 5 | Push & Background Notifications | Interview reminders | 2 |
-| A8 | 6 | App Crashes | Wire up Crashlytics, force a test crash, read the report | 1 |
-| A9 | 17 | Automated Testing | Unit tests for status logic + one UI test | 2 |
-| A10 | 31 | Feature Flags | Toggle an experimental feature without a release | 1 |
-| A11 | 32 | Performance | Measure cold start / a slow list, fix it, prove it with numbers | 2 |
-| A12 | 33 | Analytics, Monitoring | Log key events (app added, status changed) | 1 |
-| A13 | 39 | App Size | Measure APK, enable R8/shrinking, report before/after | 1 |
-
-**Build total: ~23 sessions across 13 challenges.**
-
----
-
-## Track B — Study challenges (notes)
-
-Read the chapter, write 150–250 words in your own words answering: *what's the problem, why does it only appear at scale, what are the common approaches?* Aim for IELTS Band 7 clarity — this doubles as interview prep.
-
-| # | Ch | Challenge | Note focus |
-|---|---|---|---|
-| B1 | 2 | Mistakes Are Hard to Revert | Why you can't "rollback" a shipped mobile build like a server |
-| B2 | 3 | The Long Tail of Old App Versions | Supporting users who never update |
-| B3 | 10 | Third-Party Libraries & SDKs | Hidden costs, vetting, the bloat/risk tradeoff |
-| B4 | 11 | Device & OS Fragmentation | Testing matrix reality |
-| B5 | 12 | In-App Purchases | Store rules, receipt validation, edge cases |
-| B6 | 8 | Accessibility | Why it's an engineering concern, not an afterthought |
-| B7 | 9 | CI/CD & The Build Train | The "train" model for releasing on a schedule |
-| B8 | 15 | Localization | More than translation — dates, RTL, pluralization |
-| B9 | 18 | Manual Testing | Where it still beats automation |
-| B10 | 19 | Planning & Decision Making | How large mobile teams decide |
-| B11 | 20 | Avoiding Stepping on Toes | Code ownership, module boundaries at scale |
-| B12 | 23 | Scaling Build & Merge Times | Why a 200-engineer repo gets slow |
-| B13 | 26 | Kotlin Multiplatform / KMM | The promise and the catch |
-| B14 | 29 | Web, PWA & Backend-Driven | When the server drives the UI |
-| B15 | 30 | Experimentation | A/B testing on mobile's hard constraints |
-| B16 | 34 | Mobile On-Call | What you're even on-call *for* on mobile |
-| B17 | 35 | Advanced Code Quality Checks | Static analysis, linters at scale (note: SonarSource sponsored this book) |
-| B18 | 36 | Compliance, Privacy & Security | GDPR, data handling — ties to your cybersecurity interest |
-| B19 | 37 | Client-Side Data Migrations | Migrating local DB schemas on devices you don't control |
-| B20 | 38 | Forced Upgrading | When and how to force users onto a new version |
-
-**Study total: 20 notes.**
-
----
-
-## The 8-week timeline
-
-Weeks are framed around a generic swing. Slide them to your real roster dates. "On-site" weeks lean Study; "days off" lean Build.
-
-| Week | Phase | Focus | Milestone |
-|---|---|---|---|
-| **1** | Foundation | A1 (modules + Hilt) on days off · B1, B2, B3 on-site | Repo created, app skeleton compiles, 3 notes |
-| **2** | Core state | A2, A3 · B4, B5, B6 | App holds & displays job list reliably |
-| **3** | Data layer | A4 (offline) start · B7, B8, B9 | Room DB working, can add offline |
-| **4** | Data + nav | A4 finish, A5 · B10, B11 | Offline sync proven, navigation type-safe |
-| **5** | Connect | A6, A7, A8 · B12, B13, B14 | Deeplinks + reminders + crash reporting live |
-| **6** | Quality | A9, A10 · B15, B16, B17 | Tests passing, one feature behind a flag |
-| **7** | Polish | A11, A12, A13 · B18, B19, B20 | Perf measured & improved, analytics in, APK shrunk |
-| **8** | Ship & reflect | Buffer for spillover · README + closing thoughts | App on GitHub, all notes done, ~85% reached |
-
-> Week 8 is deliberately light — it's your catch-up buffer for the night-shift days you'll inevitably miss. Don't fill it; protect it.
-
----
-
-## A-to-Z Kanban board
-
-Move cards left→right. Keep "In Progress" to **one Build + one Study** at a time — focus beats juggling, especially on tired days.
-
-### 📋 Backlog
-*(everything starts here — full list above: A1–A13, B1–B20)*
-
-### 🎯 This Swing
-*(pull ~6 Build + ~8 Study cards here at the start of each 14-day cycle)*
-
-### 🔨 In Progress
-*(max 1 Build + 1 Study)*
-
-### 👀 Review
-*(Build: does it run + is it committed? · Study: re-read your note — could you say it out loud in an interview?)*
-
-### ✅ Done
-*(Build: merged to main · Study: note in `/notes`, committed)*
-
-### ⏭️ Skipped (read-only)
-*Ch 21, 22, 24, 25, 27, 28 — read, no formal note.*
-
----
-
-## Repo structure (suggested)
+### Status Transition Flow
 
 ```
-job-tracker/
-├── README.md              ← project + this plan + progress badges
-├── notes/                 ← Track B lives here
-│   ├── 02-hard-to-revert.md
-│   ├── 03-old-versions.md
-│   └── ...
-├── app/                   ← Track A
-├── data/
-├── domain/
-└── feature-applications/
+SAVED → APPLIED → PHONE_SCREEN → TECHNICAL → FINAL_ROUND → OFFER
+                ↘              ↘            ↘             ↘
+              REJECTED       REJECTED    REJECTED       REJECTED
+              GHOSTED        GHOSTED     GHOSTED
+                ↑
+            (GHOSTED → APPLIED to re-engage)
 ```
 
-Each note committed separately = a green contribution graph that *tells a story* to anyone viewing your profile: "this person worked through a serious industry book methodically." That's portfolio gold for your job hunt.
+---
+
+## Tech Stack
+
+| Category | Technology |
+|---|---|
+| Language | Kotlin 2.0.21 |
+| UI | Jetpack Compose (BOM 2024.09.00) |
+| Architecture | Multi-module Clean Architecture |
+| DI | Hilt 2.51.1 |
+| Database | Room 2.7.1 |
+| Networking | Retrofit 2.11.0 + OkHttp |
+| Background Work | WorkManager + Hilt Workers |
+| Navigation | Jetpack Compose Navigation 2.9.0 (type-safe + deeplinks) |
+| Analytics | Firebase Analytics |
+| Crash Reporting | Firebase Crashlytics |
+| Feature Flags | Firebase Remote Config |
+| Performance | Firebase Performance Monitoring |
+| Push Notifications | Firebase Cloud Messaging |
+| Logging | Timber 5.0.1 |
+| Testing | JUnit 4, MockK, Compose UI Tests, WorkManager Testing |
+| Min SDK | 26 (Android 8.0) |
+| Target / Compile SDK | 36 |
 
 ---
 
-## Definition of "mastered" (your 85%)
+## Module Structure
 
-- **Build (13):** feature runs, is committed, and you can explain the design choice.
-- **Study (20):** note written in your own words, and you could answer a "how would you handle X at scale?" interview question on it.
-- **33 of 39 = 85%.** The 6 skipped are read-but-not-noted. Honest target, honestly hit.
+```
+job-tracker-android/
+├── app/                    # Entry point, navigation graph, DI setup, FCM service
+├── core-domain/            # Pure Kotlin — business logic, use cases, repository interfaces
+├── core-data/              # Room DB, Retrofit API, SyncWorker, ReminderWorker
+├── core-ui/                # Shared Compose theme (JobTrackerTheme), no business logic
+├── feature-applications/   # Applications list screen + detail screen
+├── feature-addedit/        # Add/edit application form
+└── feature-dashboard/      # Reserved — statistics screen (feature-flagged)
+```
+
+**Dependency rules:**
+- `core-domain` has zero Android dependencies (pure Kotlin + coroutines)
+- `core-data` and features depend on domain, not on each other
+- Features only depend on core modules, never on other features
 
 ---
 
-## First three sessions — start here
+## Dependencies
 
-1. **Day off:** Create the GitHub repo, set up the multi-module skeleton + Hilt (A1, session 1 of 3).
-2. **On-site:** Read Ch 2, write `02-hard-to-revert.md` (B1).
-3. **On-site:** Read Ch 3, write `03-old-versions.md` (B2).
+### Core Android
 
-That's it. One hour, one card, one commit at a time.
+```toml
+androidx-core-ktx = "1.18.0"
+androidx-appcompat = "1.7.1"
+androidx-lifecycle-runtime-ktx = "2.10.0"
+androidx-lifecycle-viewmodel-compose = "2.10.0"
+androidx-activity-compose = "1.13.0"
+androidx-startup = "1.2.0"
+androidx-profileinstaller = "1.4.1"
+```
+
+### Jetpack Compose
+
+```toml
+androidx-compose-bom = "2024.09.00"
+# Includes: ui, ui-graphics, ui-tooling, material3
+```
+
+### Navigation
+
+```toml
+androidx-navigation-compose = "2.9.0"
+androidx-hilt-navigation-compose = "1.2.0"
+```
+
+### Dependency Injection (Hilt)
+
+```toml
+hilt-android = "2.51.1"
+hilt-compiler = "2.51.1"
+androidx-hilt-work = "1.2.0"
+javax-inject = "1"
+```
+
+### Database (Room)
+
+```toml
+androidx-room-runtime = "2.7.1"
+androidx-room-ktx = "2.7.1"
+androidx-room-compiler = "2.7.1"  # via KSP
+```
+
+### Networking
+
+```toml
+retrofit = "2.11.0"
+retrofit-converter-gson = "2.11.0"
+okhttp-logging-interceptor = "4.12.0"
+```
+
+### Serialization & Coroutines
+
+```toml
+kotlinx-serialization-json = "1.7.3"
+kotlinx-coroutines-android = "1.8.1"
+kotlinx-coroutines-test = "1.8.1"
+```
+
+### Background Work
+
+```toml
+androidx-work-runtime-ktx = "2.10.0"
+```
+
+### Firebase
+
+```toml
+firebase-bom = "33.13.0"
+# firebase-messaging-ktx
+# firebase-analytics-ktx
+# firebase-crashlytics-ktx
+# firebase-config-ktx
+# firebase-perf-ktx
+```
+
+### Logging & Testing
+
+```toml
+timber = "5.0.1"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.3.0"
+espresso-core = "3.7.0"
+mockk = "1.13.10"
+```
+
+### Build Tooling
+
+```toml
+agp = "8.13.2"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.25"
+google-services = "4.4.2"
+firebase-crashlytics-plugin = "3.0.3"
+firebase-perf-plugin = "1.4.2"
+```
+
+---
+
+## Architecture Overview
+
+### Data Flow
+
+```
+UI (Compose) ←→ ViewModel (StateFlow) ←→ UseCase (domain) ←→ Repository ←→ Room / Retrofit
+```
+
+### Offline Sync Strategy
+
+- All writes go to Room first (`pendingSync = true`)
+- `SyncWorker` (WorkManager) runs on network restore, pushing local changes and pulling remote state
+- Soft-delete: `deletedAt` timestamp instead of hard delete — safe for offline queuing
+- Conflict resolution: `updatedAt` + `pendingSync` flag — local edits are never silently overwritten
+
+### Feature Flags
+
+Three flags managed via Firebase Remote Config:
+
+| Flag | Default | Purpose |
+|---|---|---|
+| `DASHBOARD_STATISTICS` | `false` | Enable statistics dashboard screen |
+| `ADD_EDIT_NOTES` | `true` | Show notes field in add/edit form |
+| `EXPORT_APPLICATIONS` | `false` | Export applications to CSV/PDF |
+
+### Deeplinks
+
+| Route | Destination |
+|---|---|
+| `jobtracker://applications` | Applications list |
+| `jobtracker://applications/{id}` | Application detail |
+| `jobtracker://addedit` | Add new application |
+| `jobtracker://addedit?applicationId={id}` | Edit existing application |
+
+---
+
+## Android Permissions
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Android Studio Meerkat or later
+- JDK 11+
+- A `google-services.json` file from your Firebase project placed in `app/`
+
+### Setup
+
+1. Clone the repository
+2. Add your `google-services.json` to `app/`
+3. Set your API base URL in `core-data/src/main/java/.../network/NetworkModule.kt`
+4. Sync Gradle and run on a device or emulator (API 26+)
+
+### Build Variants
+
+| Variant | Minify | Crashlytics | StrictMode |
+|---|---|---|---|
+| `debug` | No | Disabled | Enabled |
+| `release` | Yes (R8) | Enabled | Disabled |
+
+---
+
+## Testing
+
+```bash
+# Unit tests
+./gradlew test
+
+# Instrumented tests
+./gradlew connectedAndroidTest
+```
+
+**Coverage:**
+- `StatusTransitionManagerTest` — validates all valid and invalid status transitions
+- `ApplicationsScreenTest` — Compose UI test for the applications list
+- `SyncWorkerTest` — WorkManager integration tests
+
+---
+
+## APK Size
+
+R8 full-mode minification and resource shrinking are enabled in release builds.
+
+| Build | Size |
+|---|---|
+| Debug (no minify) | ~17 MB |
+| Release (R8 + shrink) | ~3.1 MB |
