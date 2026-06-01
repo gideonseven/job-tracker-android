@@ -7,12 +7,16 @@ import com.gt.jobtracker.core.domain.analytics.AnalyticsScreens
 import com.gt.jobtracker.core.domain.analytics.JobAnalytics
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
+import com.gt.jobtracker.core.data.worker.SyncManager
+import com.gt.jobtracker.core.domain.network.NetworkMonitor
 import com.gt.jobtracker.core.domain.repository.JobRepository
 import com.gt.jobtracker.core.domain.usecase.UpdateApplicationStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,12 +28,25 @@ import javax.inject.Inject
 class ApplicationsViewModel @Inject constructor(
     private val repository: JobRepository,
     private val updateStatusUseCase: UpdateApplicationStatusUseCase,
-    private val analytics: JobAnalytics
+    private val analytics: JobAnalytics,
+    private val syncManager: SyncManager,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val loadTrace = FirebasePerformance.getInstance()
         .newTrace("load_applications")
     private var traceCompleted = false
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            scope        = viewModelScope,
+            started      = SharingStarted.WhileSubscribed(5_000),
+            initialValue = true    // default true to avoid false-offline flash on launch
+        )
 
     init {
         analytics.trackScreen(AnalyticsScreens.APPLICATIONS_LIST)
@@ -85,5 +102,17 @@ class ApplicationsViewModel @Inject constructor(
 
     fun eventConsumed() {
         _event.update { null }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            syncManager.enqueueSync()
+            // Give WorkManager a moment to pick up and start the work
+            // before hiding the spinner. The list will update reactively
+            // via the Room Flow when SyncWorker writes new data.
+            delay(1_000)
+            _isRefreshing.value = false
+        }
     }
 }

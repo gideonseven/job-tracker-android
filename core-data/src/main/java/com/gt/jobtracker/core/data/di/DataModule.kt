@@ -6,7 +6,9 @@ import androidx.room.Room
 import androidx.work.WorkerFactory
 import com.gt.jobtracker.core.data.local.JobApplicationDao
 import com.gt.jobtracker.core.data.local.JobTrackerDatabase
+import com.gt.jobtracker.core.data.network.ConnectivityNetworkMonitor
 import com.gt.jobtracker.core.data.repository.JobRepositoryImpl
+import com.gt.jobtracker.core.domain.network.NetworkMonitor
 import com.gt.jobtracker.core.domain.repository.JobRepository
 import dagger.Binds
 import dagger.Module
@@ -30,6 +32,11 @@ abstract class DataModule {
     abstract fun bindWorkerFactory(
         factory: HiltWorkerFactory
     ): WorkerFactory
+
+    @Binds
+    abstract fun bindNetworkMonitor(
+        impl: ConnectivityNetworkMonitor
+    ): NetworkMonitor
 
     companion object {
         @Provides

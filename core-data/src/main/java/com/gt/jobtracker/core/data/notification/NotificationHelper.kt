@@ -1,10 +1,13 @@
 package com.gt.jobtracker.core.data.notification
 
+import android.Manifest
+import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,6 +42,7 @@ class NotificationHelper @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showInterviewReminder(
         notificationId: Int,
         company: String,
@@ -59,7 +63,7 @@ class NotificationHelper @Inject constructor(
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_dialog_info)
             .setContentTitle("Interview Reminder")
             .setContentText("You have an interview at $company for $roleTitle")
             .setPriority(NotificationCompat.PRIORITY_HIGH)

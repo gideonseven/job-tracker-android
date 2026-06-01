@@ -93,6 +93,9 @@ dependencies {
     implementation(libs.firebase.perf)
     implementation(libs.androidx.startup)
 
+    // Timber
+    implementation(libs.timber)
+
     // Modules
     implementation(project(":core-domain"))
     implementation(project(":core-data"))

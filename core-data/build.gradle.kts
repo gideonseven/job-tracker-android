@@ -31,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -48,6 +51,18 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    // Retrofit — HTTP client abstraction
+    implementation(libs.retrofit)
+
+    // Gson converter — serializes/deserializes JSON ↔ Kotlin data classes
+    implementation(libs.retrofit.converter.gson)
+
+    // OkHttp logging interceptor — logs every HTTP request/response body
+    implementation(libs.okhttp.logging.interceptor)
+
+    // Timber — used by NetworkModule (OkHttp interceptor) and safeApiCall
+    implementation(libs.timber)
 
     // Test
     testImplementation(libs.junit)

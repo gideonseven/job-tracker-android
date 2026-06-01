@@ -1,5 +1,6 @@
 package com.gt.jobtracker.feature.applications
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,8 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +53,8 @@ fun ApplicationsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val event by viewModel.event.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     LaunchedEffect(event) {
         event?.let {
@@ -71,58 +76,77 @@ fun ApplicationsScreen(
             }
         }
     ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            when (val state = uiState) {
-                is ApplicationsUiState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+        Column(modifier = Modifier.padding(padding)) {
 
-                is ApplicationsUiState.Success -> {
-                    if (state.applications.isEmpty()) {
-                        Text(
-                            text = "No applications yet. Start tracking!",
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else {
-                        LazyColumn {
-                            items(
-                                items = state.applications,
-                                key = { it.id }
-                            ) { application ->
-                                ApplicationItem(
-                                    application = application,
-                                    onStatusChange = { newStatus ->
-                                        viewModel.updateStatus(
-                                            application,
-                                            newStatus
-                                        )
-                                    },
-                                    onDelete = {
-                                        viewModel.deleteApplication(application)
-                                    },
-                                    onTap = {
-                                        onNavigateToDetail(application.id)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                is ApplicationsUiState.Error -> {
+            AnimatedVisibility(visible = !isOnline) {
+                Surface(color = MaterialTheme.colorScheme.errorContainer) {
                     Text(
-                        text = state.message,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                        text     = "You are offline. Changes will sync when reconnected.",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
                     )
                 }
             }
+
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    when (val state = uiState) {
+                        is ApplicationsUiState.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+
+                        is ApplicationsUiState.Success -> {
+                            if (state.applications.isEmpty()) {
+                                Text(
+                                    text = "No applications yet. Start tracking!",
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            } else {
+                                LazyColumn {
+                                    items(
+                                        items = state.applications,
+                                        key = { it.id }
+                                    ) { application ->
+                                        ApplicationItem(
+                                            application = application,
+                                            onStatusChange = { newStatus ->
+                                                viewModel.updateStatus(
+                                                    application,
+                                                    newStatus
+                                                )
+                                            },
+                                            onDelete = {
+                                                viewModel.deleteApplication(application)
+                                            },
+                                            onTap = {
+                                                onNavigateToDetail(application.id)
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        is ApplicationsUiState.Error -> {
+                            Text(
+                                text = state.message,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
@@ -130,7 +154,7 @@ fun ApplicationsScreen(
 @Composable
 fun ApplicationItem(
     application: JobApplication,
-    onStatusChange: (com.gt.jobtracker.core.domain.model.JobStatus) -> Unit,
+    onStatusChange: (JobStatus) -> Unit,
     onDelete: () -> Unit,
     onTap: () -> Unit = {}
 ) {

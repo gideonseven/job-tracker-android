@@ -14,5 +14,10 @@ data class JobApplicationEntity(
     val dateApplied: Long,
     val jobUrl: String? = null,
     val notes: String? = null,
-    val location: String? = null
+    val location: String? = null,
+    val serverId: String? = null,
+    val pendingSync: Boolean = true,
+    val deletedAt: Long? = null,
+    val updatedAt: Long = System.currentTimeMillis(),
+    val syncError: String? = null
 )

@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class SyncManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    fun requestSync() {
+    fun enqueueSync() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
