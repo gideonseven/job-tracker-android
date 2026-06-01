@@ -1,10 +1,10 @@
 package com.gt.jobtracker.feature.applications
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.material3.MaterialTheme
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
 import org.junit.Rule

@@ -1,6 +1,8 @@
 package com.gt.jobtracker.core.data.notification
 
+import android.Manifest
 import android.content.Context
+import androidx.annotation.RequiresPermission
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -14,6 +16,7 @@ class ReminderWorker @AssistedInject constructor(
     private val notificationHelper: NotificationHelper
 ) : CoroutineWorker(context, workerParams) {
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
         val company = inputData.getString(KEY_COMPANY) ?: return Result.failure()
         val roleTitle = inputData.getString(KEY_ROLE_TITLE) ?: return Result.failure()

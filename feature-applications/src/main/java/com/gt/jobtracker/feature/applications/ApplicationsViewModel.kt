@@ -3,11 +3,11 @@ package com.gt.jobtracker.feature.applications
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.perf.FirebasePerformance
+import com.gt.jobtracker.core.data.worker.SyncManager
 import com.gt.jobtracker.core.domain.analytics.AnalyticsScreens
 import com.gt.jobtracker.core.domain.analytics.JobAnalytics
 import com.gt.jobtracker.core.domain.model.JobApplication
 import com.gt.jobtracker.core.domain.model.JobStatus
-import com.gt.jobtracker.core.data.worker.SyncManager
 import com.gt.jobtracker.core.domain.network.NetworkMonitor
 import com.gt.jobtracker.core.domain.repository.JobRepository
 import com.gt.jobtracker.core.domain.usecase.UpdateApplicationStatusUseCase
