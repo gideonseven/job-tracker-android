@@ -11,5 +11,6 @@ data class AddEditUiState(
     val notes: String = "",
     val error: String? = null,
     val isEditing: Boolean = false,
-    val existingId: Long? = null
+    val existingId: Long? = null,
+    val isSaving: Boolean = false
 )

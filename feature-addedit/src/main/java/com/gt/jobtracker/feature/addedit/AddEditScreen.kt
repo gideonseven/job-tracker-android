@@ -158,6 +158,7 @@ fun AddEditScreen(
 
             Button(
                 onClick = viewModel::save,
+                enabled = !uiState.isSaving,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(if (uiState.isEditing) "Update" else "Save Application")

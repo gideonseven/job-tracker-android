@@ -82,6 +82,7 @@ class AddEditViewModel @Inject constructor(
             return
         }
 
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             repository.upsertApplication(
                 JobApplication(
