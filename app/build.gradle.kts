@@ -102,7 +102,6 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":feature-applications"))
     implementation(project(":feature-addedit"))
-    implementation(project(":feature-dashboard"))
 
     // Test
     testImplementation(libs.junit)

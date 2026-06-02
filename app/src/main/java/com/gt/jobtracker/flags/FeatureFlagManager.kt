@@ -21,7 +21,6 @@ class FeatureFlagManager @Inject constructor() {
         // default values — all flags off by default
         remoteConfig.setDefaultsAsync(
             mapOf(
-                FeatureFlags.DASHBOARD_STATISTICS to false,
                 FeatureFlags.ADD_EDIT_NOTES to true,
                 FeatureFlags.EXPORT_APPLICATIONS to false
             )

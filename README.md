@@ -64,7 +64,6 @@ job-tracker-android/
 ├── core-ui/                # Shared Compose theme (JobTrackerTheme), no business logic
 ├── feature-applications/   # Applications list screen + detail screen
 ├── feature-addedit/        # Add/edit application form
-└── feature-dashboard/      # Reserved — statistics screen (feature-flagged)
 ```
 
 **Dependency rules:**
@@ -196,7 +195,6 @@ Three flags managed via Firebase Remote Config:
 
 | Flag | Default | Purpose |
 |---|---|---|
-| `DASHBOARD_STATISTICS` | `false` | Enable statistics dashboard screen |
 | `ADD_EDIT_NOTES` | `true` | Show notes field in add/edit form |
 | `EXPORT_APPLICATIONS` | `false` | Export applications to CSV/PDF |
 

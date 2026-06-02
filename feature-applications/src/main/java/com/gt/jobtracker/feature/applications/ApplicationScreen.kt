@@ -65,7 +65,7 @@ fun ApplicationsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("My Applications") })
+            TopAppBar(title = { Text("Job Tracker App") })
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
