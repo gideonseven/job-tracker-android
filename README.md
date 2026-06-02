@@ -2,9 +2,15 @@
 
 A production-quality Android app for tracking job applications through their full lifecycle. Built with a multi-module Clean Architecture, Jetpack Compose, and a complete Firebase integration stack including offline-first sync, push notifications, feature flags, crash reporting, and performance monitoring.
 
-> Inspired by *Building Mobile Apps at Scale* by Gergely Orosz — implemented to cover 13 hands-on engineering challenges from the book.
 
 ---
+
+## Screenshots
+| Page   | Light                                           | Dark                                            |
+|--------|-------------------------------------------------|-------------------------------------------------|
+| Home   | <img src="screenshots/home_w.png" width="200"/>   | <img src="screenshots/home_b.png" width="200"/>   |
+| Detail | <img src="screenshots/detail_w.png" width="200"/> | <img src="screenshots/detail_b.png" width="200"/> |
+| Edit   | <img src="screenshots/edit_w.png" width="200"/>   | <img src="screenshots/edit_b.png" width="200"/>   |
 
 ## Features
 
@@ -195,6 +201,7 @@ Three flags managed via Firebase Remote Config:
 
 | Flag | Default | Purpose |
 |---|---|---|
+| `DASHBOARD_STATISTICS` | `false` | Show statistics on the dashboard screen |
 | `ADD_EDIT_NOTES` | `true` | Show notes field in add/edit form |
 | `EXPORT_APPLICATIONS` | `false` | Export applications to CSV/PDF |
 
@@ -238,7 +245,7 @@ Three flags managed via Firebase Remote Config:
 
 | Variant | Minify | Crashlytics | StrictMode |
 |---|---|---|---|
-| `debug` | No | Disabled | Enabled |
+| `debug` | No | Enabled | Enabled |
 | `release` | Yes (R8) | Enabled | Disabled |
 
 ---
